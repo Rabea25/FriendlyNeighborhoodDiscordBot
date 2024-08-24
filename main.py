@@ -10,7 +10,7 @@ Bot = discord.Client(intents=discord.Intents.all(), status=discord.Status.online
                      activity=discord.Game("at being a silly Goose"), command_prefix=">")
 tree = app_commands.CommandTree(Bot)
 
-
+#ff
 @Bot.event
 async def on_ready():
     print('up n runnin')
