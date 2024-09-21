@@ -10,12 +10,17 @@ class Bot(commands.Bot):
         super().__init__(command_prefix='>', intents = intents, status=discord.Status.idle, activity=discord.Game("at being a silly Goose"))
 
     async def setup_hook(self):
-        #await self.load_extension(f"cogs.testcog")
+        for file in os.listdir('./cogs'):
+            if file.endswith('.py'):
+                await self.load_extension(f'cogs.{file[:-3]}')
+
         await self.tree.sync(guild=discord.Object(id=892133019094241330))
         print("I hath synced")
 
     async def on_command_error(self, ctx, error):
         await ctx.reply(error, ephemeral=True)
+
+
 
     async def on_ready(self):
         print(f"{self.user} is up n runnin")
