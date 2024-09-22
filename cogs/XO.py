@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 from discord import app_commands
+import random
 
 def chckwin(board):
     if board[0]==board[1]==board[2]!='~':
@@ -69,6 +70,28 @@ class xogame(commands.Cog):
                     await ctx.send(f"Congratulations! {member2} wins.")
             else:
                 await ctx.send("nobody won, losers.")
+
+    @commands.hybrid_command(name="guessthenumber", with_app_command=True, aliases=["gtn", "guess", "GUESS"])
+    async def guessthenumber(self, ctx, b=0):
+        player = ctx.author
+        await ctx.reply("welcome to guess the number, to guess, enter a number between 1 and an upper bound of your choice if you haven't already")
+        if b==0:
+            await ctx.send('please write a number')
+            b = await self.bot.wait_for('message', check=lambda message: message.author == player)
+            b = int(b.content)
+            await ctx.send('okay now start guessing')
+        num = random.randint(1, b)
+        guesses=1
+        while guesses:
+            ans = await self.bot.wait_for('message', check=lambda message: message.author == player)
+            ans = int(ans.content)
+            if ans == num:
+                await ctx.send('Correct, now go do something useful.')
+                break
+            if ans < num:
+                await ctx.send('go higher')
+            if ans > num:
+                await ctx.send('nope, lower')
 
 
 
