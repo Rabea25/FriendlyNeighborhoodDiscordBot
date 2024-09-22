@@ -14,7 +14,7 @@ class Bot(commands.Bot):
             if file.endswith('.py'):
                 await self.load_extension(f'cogs.{file[:-3]}')
 
-        #await self.tree.sync(guild=discord.Object(id=892133019094241330))
+        await self.tree.sync(guild=discord.Object(id=892133019094241330))
         print("I hath synced")
 
     async def on_command_error(self, ctx, error):

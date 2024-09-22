@@ -24,15 +24,15 @@ def chckwin(board):
     return '~'
 
 
-class xogame(commands.Cog):
+class minigames(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
     @commands.Cog.listener()
     async def on_ready(self):
-        print("xogame cog loaded")
+        print("minigames cog loaded")
 
-    @commands.hybrid_command(name="twopxo", with_app_command=True, aliases=["XO", "Xo", "xO"])
+    @commands.hybrid_command(name="twopxo", with_app_command=True, aliases=["XO", "Xo", "xO", "xo"])
     async def twopxo(self, ctx, member: discord.Member, member2: discord.Member):
         playerss = [member, member2]
         board = ['~', '~', '~', '~', '~', '~', '~', '~', '~']
@@ -76,17 +76,18 @@ class xogame(commands.Cog):
         player = ctx.author
         await ctx.reply("welcome to guess the number, to guess, enter a number between 1 and an upper bound of your choice if you haven't already")
         if b==0:
-            await ctx.send('please write a number')
+            await ctx.send('please write a number to choose the upper limit')
             b = await self.bot.wait_for('message', check=lambda message: message.author == player)
             b = int(b.content)
             await ctx.send('okay now start guessing')
         num = random.randint(1, b)
         guesses=1
         while guesses:
+            guesses+=1
             ans = await self.bot.wait_for('message', check=lambda message: message.author == player)
             ans = int(ans.content)
             if ans == num:
-                await ctx.send('Correct, now go do something useful.')
+                await ctx.send(f'Correct, you used {guesses-1} guesses bozo, now go do something useful.')
                 break
             if ans < num:
                 await ctx.send('go higher')
@@ -96,5 +97,5 @@ class xogame(commands.Cog):
 
 
 async def setup(bot):
-    await bot.add_cog(xogame(bot))
+    await bot.add_cog(minigames(bot))
 
