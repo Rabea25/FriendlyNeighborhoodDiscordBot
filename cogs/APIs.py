@@ -13,7 +13,7 @@ class APIS(commands.Cog):
 
 
 
-    @commands.hybrid_command(name='pr', with_app_command=True)
+    @commands.hybrid_command(name='pr', with_app_command=True, aliases=["PR", "pR", "Pr"])
     async def pr(self, ctx):
         location = aladhan.City("Alexandria", "EG", "Egypt")
         client = aladhan.Client(location)
