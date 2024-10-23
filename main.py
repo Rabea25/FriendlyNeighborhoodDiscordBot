@@ -1,4 +1,7 @@
+import asyncio
 import os
+from datetime import datetime, timedelta
+import aladhan
 from dotenv import load_dotenv
 import discord
 from discord import app_commands
@@ -14,7 +17,7 @@ class Bot(commands.Bot):
             if file.endswith('.py'):
                 await self.load_extension(f'cogs.{file[:-3]}')
 
-        await self.tree.sync(guild=discord.Object(id=892133019094241330))
+        #await self.tree.sync(guild=discord.Object(id=892133019094241330))
         print("I hath synced")
 
     async def on_command_error(self, ctx, error):
@@ -23,12 +26,30 @@ class Bot(commands.Bot):
 
 
     async def on_ready(self):
+        await scheduled_msg()
         print(f"{self.user} is up n runnin")
+
+
 
 def chk(ctx):
     return ctx.author.id == 724770082479144971 or ctx.author.id == 599944573258694657 or ctx.author.guild_permissions.administrator
 
 bot = Bot()
+
+async def scheduled_msg():
+    while True:
+        now = datetime.now()
+        next_midnight = (now + timedelta(days=1)).replace(hour=0, minute=0, second=0, microsecond=0)
+        time_until_midnight = (next_midnight - now).total_seconds()
+        print(time_until_midnight/60)
+        await asyncio.sleep(time_until_midnight)
+        location = aladhan.City("Alexandria", "EG", "Egypt")
+        client = aladhan.Client(location)
+        x = client.get_today_times(location)
+        channel = bot.get_channel(1298693730198622348)
+        await channel.purge(limit=5)
+        for adhan in x:
+            await channel.send("{: <15} | {: <15}".format(adhan.get_en_name(), adhan.readable_timing(show_date=False)))
 
 @bot.hybrid_command(name="ping", with_app_command=True, description="Pong!", aliases=["Ping", "PING"])
 async def ping(ctx: commands.Context):
