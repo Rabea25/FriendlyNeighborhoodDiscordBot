@@ -1,7 +1,7 @@
 import discord, asyncio
 from discord.ext import commands
 from discord import app_commands
-import aladhan
+import requests, bs4, json
 
 class APIS(commands.Cog):
     def __init__(self, bot):
@@ -14,23 +14,23 @@ class APIS(commands.Cog):
 
 
     @commands.hybrid_command(name='pr', with_app_command=True, aliases=["PR", "pR", "Pr"])
-    async def pr(self, ctx, tz='EG'):
-        location = aladhan.City("Alexandria", "EG", "Egypt")
-        client = aladhan.Client(location)
-        x = client.get_today_times(location)
-        if tz=='KSA' or tz=='ksa' or tz=='sa' or tz=='SA':
-            location = aladhan.City("Jeddah", "SA")
-            client = aladhan.Client(location)
-            x = client.get_today_times(location)
-        #if tz == 'KR' or tz == 'kr' or tz == 'Kr' or tz == 'kR':
-        #    location = aladhan.City("AbuDhabi", "AE")
-        #    client = aladhan.Client(location)
-        #    x = client.get_today_times(location)
-        for adhan in x:
-            await ctx.send("{: <15} | {: <15}".format(adhan.get_en_name(), adhan.readable_timing(show_date=False)))
+    async def pr(self, ctx, city='alex'):
+        city = city.lower()
+        url = "https://www.islamicfinder.org/world/egypt/361058/alexandria-prayer-times/"
+        if city == 'cairo':
+            url = "https://www.islamicfinder.org/world/egypt/360630/cairo-prayer-times/"
+        elif city == 'kr' or city == 'daejeon':
+            url = 'https://www.islamicfinder.org/world/republic-of-korea/1835235/daejeon-prayer-times/'
+        elif city == 'ksa' or city == 'jeddah':
+            url = 'https://www.islamicfinder.org/world/saudi-arabia/105343/jeddah-makkah-province-sa-prayer-times/'
+        elif city == 'uae' or city == 'abudhabi' or city == 'ad':
+            url = 'https://www.islamicfinder.org/world/united-arab-emirates/292968/abu-dhabi-abu-dhabi-ae-prayer-times/'
 
-
-
+        soup = bs4.BeautifulSoup(requests.get(url).text, 'html.parser')
+        names = [i.text for i in soup.find_all('span', class_='prayername')]
+        times = [i.text for i in soup.find_all('span', class_='prayertime')]
+        for p in zip(names, times):
+            await ctx.send("{} - {}".format(p[0], p[1]))
 
 async def setup(bot):
     await bot.add_cog(APIS(bot))

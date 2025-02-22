@@ -17,7 +17,7 @@ class Bot(commands.Bot):
             if file.endswith('.py'):
                 await self.load_extension(f'cogs.{file[:-3]}')
 
-        #await self.tree.sync(guild=discord.Object(id=892133019094241330))
+        await self.tree.sync(guild=discord.Object(id=892133019094241330))
         print("I hath synced")
 
     async def on_command_error(self, ctx, error):
@@ -43,13 +43,14 @@ async def scheduled_msg():
         time_until_midnight = (next_midnight - now).total_seconds()
         print(time_until_midnight/60)
         await asyncio.sleep(time_until_midnight)
-        location = aladhan.City("Alexandria", "EG", "Egypt")
-        client = aladhan.Client(location)
-        x = client.get_today_times(location)
         channel = bot.get_channel(1298693730198622348)
-        await channel.purge(limit=5)
-        for adhan in x:
-            await channel.send("{: <15} | {: <15}".format(adhan.get_en_name(), adhan.readable_timing(show_date=False)))
+        if channel:
+            ctx = await bot.get_context(await channel.send("Processing..."))  # Fake message to create a context
+            await channel.purge(limit=20)
+            ctx.command = bot.get_command("pr")  # Set the command manually
+            await bot.invoke(ctx)
+        #await asyncio.sleep(time_until_midnight)
+
 
 @bot.hybrid_command(name="ping", with_app_command=True, description="Pong!", aliases=["Ping", "PING"])
 async def ping(ctx: commands.Context):
