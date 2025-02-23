@@ -2,6 +2,7 @@ import asyncio
 import os
 from datetime import datetime, timedelta
 import aladhan
+from Tools.scripts.make_ctype import values
 from dotenv import load_dotenv
 import discord
 from discord import app_commands
@@ -17,7 +18,7 @@ class Bot(commands.Bot):
             if file.endswith('.py'):
                 await self.load_extension(f'cogs.{file[:-3]}')
 
-        await self.tree.sync(guild=discord.Object(id=892133019094241330))
+        #await self.tree.sync(guild=discord.Object(id=892133019094241330))
         print("I hath synced")
 
     async def on_command_error(self, ctx, error):
@@ -45,9 +46,9 @@ async def scheduled_msg():
         await asyncio.sleep(time_until_midnight)
         channel = bot.get_channel(1298693730198622348)
         if channel:
-            ctx = await bot.get_context(await channel.send("Processing..."))  # Fake message to create a context
             await channel.purge(limit=20)
-            ctx.command = bot.get_command("pr")  # Set the command manually
+            ctx = await bot.get_context(await channel.send("."))  # Fake message to create a context
+            ctx.command = bot.get_command("prr")  # Set the command manually
             await bot.invoke(ctx)
         #await asyncio.sleep(time_until_midnight)
 
@@ -77,6 +78,16 @@ async def unban(ctx: commands.Context, member: discord.Member):
     await ctx.defer(ephemeral=True)
     await ctx.guild.unban(member)
     await ctx.reply(f"Unbanned {member.name}.")
+
+@bot.hybrid_command(name="testembed", with_app_command=True, description="test embed", aliases=["Testembed", "TESTEMBED"])
+async def testembed(ctx: commands.Context):
+    await ctx.defer(ephemeral=True)
+    embed = discord.Embed(title="Prayer Times", description="Alexandria", color=discord.Color.green())
+    embed.set_author(name="Ramadan Soon™️", icon_url='https://www.citypng.com/public/uploads/preview/png-ramadan-fanous-light-lantern-704081695045024fg4phtiihn.png')
+    embed.set_footer(text="This is a footer")
+    embed.add_field(name="Alexandria", inline=True, value="Fajr: 4:30 \nDhuhr: 12:30 \nAsr: 3:30 \nMaghrib: 6:30 \nIsha: 8:30")
+    embed.add_field(name="Field 2", value="Value 2", inline=False)
+    await ctx.reply(embed=embed)
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
