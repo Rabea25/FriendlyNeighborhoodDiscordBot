@@ -2,7 +2,6 @@ import asyncio
 import os
 from datetime import datetime, timedelta
 import aladhan
-from Tools.scripts.make_ctype import values
 from dotenv import load_dotenv
 import discord
 from discord import app_commands

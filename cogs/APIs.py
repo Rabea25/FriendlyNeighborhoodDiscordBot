@@ -36,6 +36,9 @@ class APIS(commands.Cog):
         elif city == 'giza':
             url = 'https://www.islamicfinder.org/world/egypt/360995/giza-prayer-times/'
             city = 'Giza'
+        elif city == 'dublin':
+            city = 'Dublin'
+            url = 'https://www.islamicfinder.org/world/ireland/2964574/dublin-leinster-ie-prayer-times/'
         else:
             city = 'Alexandria'
         soup = bs4.BeautifulSoup(requests.get(url).text, 'html.parser')
@@ -58,11 +61,12 @@ class APIS(commands.Cog):
                   ['Daejeon', 'https://www.islamicfinder.org/world/republic-of-korea/1835235/daejeon-prayer-times/'],
                   ['Jeddah', 'https://www.islamicfinder.org/world/saudi-arabia/105343/jeddah-makkah-province-sa-prayer-times/'],
                   ['Abu Dhabi', 'https://www.islamicfinder.org/world/united-arab-emirates/292968/abu-dhabi-abu-dhabi-ae-prayer-times/'],
-                  ['Fayoum', 'https://www.islamicfinder.org/world/egypt/42607115/fayoum-prayer-times/']]
+                  ['Fayoum', 'https://www.islamicfinder.org/world/egypt/42607115/fayoum-prayer-times/'],
+                  ['Dublin', 'https://www.islamicfinder.org/world/ireland/2964574/dublin-leinster-ie-prayer-times/']]
 
         embed = discord.Embed(title="Prayer Times", color=discord.Color.random())
-        embed.set_author(name="Ramadan Soon™️",
-                         icon_url='https://www.citypng.com/public/uploads/preview/png-ramadan-fanous-light-lantern-704081695045024fg4phtiihn.png')
+        embed.set_author(name="Pray on time!",
+                         icon_url='https://img.freepik.com/premium-vector/red-exclamation-mark-symbol-attention-caution-sign-icon-3d-realistic-design-element_363543-554.jpg?semt=ais_hybrid&w=740')
         await ctx.defer(ephemeral=True)
         await ctx.reply("Processing...")
         for city in cities:
