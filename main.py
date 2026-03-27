@@ -49,6 +49,12 @@ async def scheduled_msg():
             ctx = await bot.get_context(await channel.send("."))  # Fake message to create a context
             ctx.command = bot.get_command("prr")  # Set the command manually
             await bot.invoke(ctx)
+        channel2 = bot.get_channel(1458127846647005237)
+        if channel2:
+            await channel2.purge(limit=20)
+            ctx = await bot.get_context(await channel2.send("."))  # Fake message to create a context
+            ctx.command = bot.get_command("prr")  # Set the command manually
+            await bot.invoke(ctx)
         #await asyncio.sleep(time_until_midnight)
 
 
