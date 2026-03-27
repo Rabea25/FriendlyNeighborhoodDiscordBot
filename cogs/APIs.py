@@ -41,7 +41,9 @@ class APIS(commands.Cog):
             url = 'https://www.islamicfinder.org/world/ireland/2964574/dublin-leinster-ie-prayer-times/'
         else:
             city = 'Alexandria'
-        soup = bs4.BeautifulSoup(requests.get(url).text, 'html.parser')
+        
+        headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'}
+        soup = bs4.BeautifulSoup(requests.get(url, headers=headers).text, 'html.parser')
         names = [i.text for i in soup.find_all('span', class_='prayername')]
         times = [i.text for i in soup.find_all('span', class_='prayertime')]
         #for p in zip(names, times):
@@ -69,8 +71,11 @@ class APIS(commands.Cog):
                          icon_url='https://img.freepik.com/premium-vector/red-exclamation-mark-symbol-attention-caution-sign-icon-3d-realistic-design-element_363543-554.jpg?semt=ais_hybrid&w=740')
         await ctx.defer(ephemeral=True)
         await ctx.reply("Processing...")
+        
+        headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'}
         for city in cities:
-            req = requests.get(city[1])
+            req = requests.get(city[1], headers=headers)
+            print(req)
             if req.status_code == 200:
                 soup = bs4.BeautifulSoup(req.text, 'html.parser')
                 names = [i.text for i in soup.find_all('span', class_='prayername')]
